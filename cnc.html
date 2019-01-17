@@ -1,0 +1,614 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>CNC</title>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <link href="estilo.css" rel="stylesheet">
+
+		<script type="text/javascript">
+		
+ function retorno(){
+
+
+/////desbaste externo///////
+
+function desbaste(){
+for(var x = diametro_bruto; x > diametro_final; x--){
+          document.write( 'G00 X ' + x + ' Z ' + 2. + '<br />' );
+           document.write('G04 F.01 <br />');
+           document.write( 'G01 Z ' + comprimento + ' F.15 <br />');
+           document.write('G00 X ' + (x+2) + '<br />' );
+           document.write('G00 X ' + (x+2) + ' Z ' + 2. + '<br />' );
+           document.write('G04 F.01 <br />');      
+
+   }
+
+ }
+
+function desbaste_rebaixo_1(){
+       for(var x = diametro_final; x > diametro_rebaixo; x--){
+          document.write( 'G00 X ' + x + '<br />');
+          document.write( 'G01 Z ' + comprimento_rebaixo + ' F.15 <br />');
+          document.write('G00 X ' + (x+2) + '<br />');
+          document.write('G00 Z ' + 2 + '<br />');
+
+   }
+
+ }
+
+ function desbaste_rebaixo_2(){
+       for(var x = diametro_rebaixo; x > diametro_rebaixo_2; x--){
+          document.write( 'G00 X ' + x + '<br />');
+          document.write( 'G01 Z ' + comprimento_rebaixo_2 + ' F.15 <br />');
+          document.write('G00 X ' + (x+2) + '<br />');
+          document.write('G00 Z ' + 2 + '<br />');
+
+   }
+
+ }
+/////////////////////////////
+
+ ////desbaste interno////
+  function desb_interno(){
+   for(var x = diametro_furo_inicial; x < diametro_furo_final; x++){
+           document.write( 'G00 X ' + x + ' Z ' + 2 + '<br />');  
+           document.write('G04 F.01 <br />');
+           document.write( 'G01 Z ' + comprimento + ' F.1 <br />');
+           document.write('G00 X ' + (x-2) + '<br />');
+           document.write('G00 X ' + (x-2) + ' Z ' + 2 + '<br />');
+           document.write('G04 F.01 <br />');
+
+  }
+  
+}
+
+
+function desb_interno_rebaixo(){
+     for(var x = diametro_furo_final; x < diametro_rebaixo_interno; x++){
+           document.write( 'G00 X ' + x + '<br />');
+           document.write( 'G01 Z ' + comprimento_rebaixo_interno + ' F.15 <br />');
+           document.write('G00 X ' + (x-2) + '<br />');
+           document.write('G00 Z ' + 2 + '<br />');
+         
+    }
+
+ }
+
+ function desb_interno_rebaixo_2(){
+     for(var x = diametro_rebaixo_interno; x < diametro_rebaixo_interno_2; x++){
+           document.write( 'G00 X ' + x + '<br />');
+           document.write( 'G01 Z ' + comprimento_rebaixo_interno_2 + ' F.15 <br />');
+           document.write('G00 X ' + (x-2) + '<br />');
+           document.write('G00 Z ' + 2 + '<br />');
+         
+    }
+
+ }
+
+
+function desbaste_rebaixo_pos_raio(){
+
+  a = diametro_rebaixo + raio_externo;
+       for(var x = diametro_final; x > a; x--){
+          document.write( 'G00 X ' + x + '<br />');
+          document.write( 'G01 Z ' + comprimento_rebaixo + ' F.15 <br />');
+          document.write('G00 X ' + (x+2) + '<br />');
+          document.write('G00 Z ' + 2 + '<br />');
+
+   }
+
+ }
+
+function desbaste_rebaixo_1_raio(){
+
+      a = raio_externo / 2;
+       for(var x = diametro_final; x > diametro_rebaixo; x--){
+          document.write( 'G00 X ' + x + '<br />');
+         
+          document.write( 'G00 z ' + (comprimento_rebaixo + a) + '<br />');
+
+          document.write( 'G02 Z ' + (comprimento_rebaixo + .8) + ' cr = ' +  a + '<br />');
+          document.write('G00 X ' + (x+2) + '<br />');
+          document.write('G00 Z ' + 2 + '<br />');
+
+   }
+
+ }
+
+
+//////////////acabamento externo//////////
+function acabamento_ext(){
+     document.write('G00 X ' + (diametro_furo_final - 2) + ' Z ' + 10 + '<br />');
+     document.write('G00 X ' + (diametro_furo_final - 2) + ' Z ' + 1 + '<br />');
+     document.write('G04 F.01 <br />');
+     document.write('G01  G42  Z ' + 0 + ' F.1 <br />');
+     document.write(' X ' + (diametro_final - .4) + '<br />');
+     document.write(' X ' + diametro_final +  ' Z ' + (-.3) + '<br />');
+     document.write('G01 Z ' + comprimento + '<br />');
+     document.write('X ' + (diametro_final + 2) + ' Z ' + 10 + '<br />');
+     document.write('G04 F.01 <br />');
+     document.write('G40 <br />');
+     document.write('G90 G00 G53 X240 Z300 T0 D0 M9 <br />');
+     document.write(' M05 <br />');
+     document.write(' M00 <br />');
+     document.write('G40 <br />');
+   }
+
+function acabamento_externo_1_rebaixo(){
+    document.write('G00 X ' + (diametro_furo_inicial - 2) + ' Z ' + 10 + '<br />');
+     document.write('G00 Z ' + 0 + '<br />'); 
+     document.write('G01 X ' + diametro_rebaixo + ' F.15 <br />');
+     document.write('G01 Z ' + comprimento_rebaixo + '<br />');
+     document.write('X ' + diametro_final + '<br />');
+     document.write('G01 Z ' + comprimento + '<br />');
+     document.write('X ' + (diametro_final + 2) + '<br />');
+     document.write('Z ' + 2 + '<br />');
+}
+
+function acabamento_externo_2_rebaixo(){
+    document.write('G00 X ' + (diametro_furo_inicial - 2) + ' Z ' + 10 + '<br />');
+     document.write('G00 Z ' + 0 + '<br />'); 
+     document.write('G01 X ' + diametro_rebaixo_2 + ' F.15 <br />');
+     document.write('G01 Z ' + comprimento_rebaixo_2 + '<br />');
+     document.write('X ' + diametro_rebaixo + '<br />');
+     document.write('Z ' + comprimento_rebaixo + '<br />');
+     document.write('X ' + diametro_final + '<br />');
+     document.write('G01 Z ' + comprimento + '<br />');
+     document.write('G00 X ' + (diametro_final + 2) + '<br />');
+     document.write('G00 Z ' + 2 + '<br />');
+}
+
+
+///////Acamento interno//////////////
+
+function acabamento_inter(){
+     document.write('G00 X ' + (diametro_furo_final + 2) + ' Z ' + 20 + '<br />');
+     document.write('G00 X ' + (diametro_furo_final + 2) + ' Z ' + .7 + '<br />');
+     document.write('G04 F.01 <br /> ' );
+     document.write('G01 G41 ' + (diametro_furo_final + .6) + ' Z ' + 0 + ' F.08 <br />');
+     document.write('G00 X ' + diametro_furo_final + ' Z ' + -.3 + '<br />');
+     document.write('G01' + comprimento + ' F.15 <br />');
+     document.write('G00 X ' + (diametro_furo_final - 2) + '<br />');
+     document.write('G00 X ' + (diametro_furo_final - 2) + ' Z ' + 20 + '<br />');
+     document.write('G04 F.01 <br />' );
+     document.write('G40 <br />' );   
+}
+
+
+function acabamento_inter_1_rebaixo(){
+     document.write('G00 X ' + diametro_rebaixo_interno + '<br />');
+     document.write('G01 Z' + comprimento_rebaixo_interno + ' F.15 <br />');
+     document.write('G01 X ' + diametro_furo_final + ' <br />');
+     document.write('G01 Z' + comprimento + ' F.15 <br />');
+     document.write('G01 X ' + (diametro_furo_final-2) + '<br />');
+     document.write('G00 Z ' + 2 + '<br />');
+   }
+
+   function acabamento_inter_2_rebaixo(){
+     document.write('G00 X ' + diametro_rebaixo_interno_2 + '<br />');
+     document.write('G01 Z' + comprimento_rebaixo_interno_2 + ' F.15 <br />');
+     document.write('G00 X ' + diametro_rebaixo_interno + '<br />');
+     document.write('G01 Z' + comprimento_rebaixo_interno + ' F.15 <br />');
+     document.write('G01 X ' + diametro_furo_final + ' <br />');
+     document.write('G01 Z' + comprimento + ' F.15 <br />');
+     document.write('G01 X ' + (diametro_furo_final-2) + '<br />');
+     document.write('G00 Z ' + 2 + '<br />');
+   }
+
+
+//////////////////////////
+
+ 	function aproximacao(){ document.write('G00 X ' + (diametro_bruto + 10) + ' Z ' + 10);
+     document.write('<br />');
+       }
+
+       function espaco(){
+            document.write('G00 X ' + 50 + ' Z ' + 50);
+           document.write('<br />');
+          }
+
+     var comprimento = document.getElementById('comprimento').value;
+     var diametro_bruto = document.getElementById('diametro_bruto').value;
+     var diametro_final = document.getElementById('diametro_final').value;
+     var diametro_furo_inicial = document.getElementById('diametro_furo_inicial').value;
+     var diametro_furo_final = document.getElementById('diametro_furo_final').value;
+     var comprimento_rebaixo = document.getElementById('comprimento_rebaixo').value;
+     var diametro_rebaixo = document.getElementById('diametro_rebaixo').value;
+     var comprimento_rebaixo_2 = document.getElementById('comprimento_rebaixo_2').value;
+     var diametro_rebaixo_2 = document.getElementById('diametro_rebaixo_2').value;
+     var comprimento_rebaixo_interno_2 = document.getElementById('comprimento_rebaixo_interno_2').value;
+     var diametro_rebaixo_interno_2 = document.getElementById('diametro_rebaixo_interno_2').value;
+     var comprimento_rebaixo_interno = document.getElementById('comprimento_rebaixo_interno').value;
+     var diametro_rebaixo_interno = document.getElementById('diametro_rebaixo_interno').value;
+     var comprimento_corte = document.getElementById('comprimento_corte').value;
+     var raio_externo = document.getElementById('raio_externo').value;
+
+     comprimento = parseInt(comprimento);
+     diametro_bruto = parseInt(diametro_bruto);
+     diametro_final = parseInt(diametro_final);
+     diametro_furo_inicial = parseInt(diametro_furo_inicial);
+     diametro_furo_final = parseInt(diametro_furo_final);
+     comprimento_rebaixo = parseInt(comprimento_rebaixo);
+     diametro_rebaixo =parseInt(diametro_rebaixo);
+     comprimento_rebaixo_2 = parseInt(comprimento_rebaixo_2);
+     diametro_rebaixo_2 =parseInt(diametro_rebaixo_2);
+     comprimento_rebaixo_interno = parseInt(comprimento_rebaixo_interno);
+     diametro_rebaixo_interno = parseInt(diametro_rebaixo_interno);
+     comprimento_corte = parseInt(comprimento_corte);
+
+     var raio_externo = parseInt(raio_externo);
+
+
+      document.write('; 24/12/2018  16:09:00  <br />' );
+      document.write('; PROGRAMADOR: LUCAS DEL DUQUE  <br />' );
+      document.write('; MAQUINA: TND 160  <br />' );
+      document.write('; MATERIAL 70 X 60 <br />' );
+      document.write('; PRÉ FURAR COM TMAX D25 MM  <br />' );
+      document.write('; -------------------------------- <br />' );
+      document.write('; -------------------------------- <br />' );
+      document.write('; FERRAMENTAS UTILIZADAS NO PROCESSO DE USINAGEM  <br />' );
+      document.write('; T1 DESBASTE EXTERNO - WNMG  <br />' );
+      document.write('; T4 DESBASTE INTERNO - CCMT  <br />' );
+      document.write('; T6 ACABENTO INTERNO - DCTM  <br />' );
+      document.write('; T5 ACAMENTO EXTERNO - DCMT  <br />' );
+      document.write('; T8 CORTE BEDAME 3 - DCMT  <br />' );
+      document.write('; -------------------------------- <br />' );
+      document.write('; -------------------------------- <br />' );
+      document.write('; DESCRIÇÃO DAS MEDIDAS  <br />' );
+
+      document.write('COMPRIMENTO TOTAL : '  + comprimento + ' <br />');
+      document.write('DIAMETRO BRUTO : '  + diametro_bruto + ' <br />');
+      document.write('DIAMETRO FINAL : '  + diametro_final + ' <br />');
+      document.write('DIAMETRO INICIAL DO FURO : '  + diametro_furo_inicial + ' <br />');
+      document.write('DIAMETRO FINAL DO FURO : '  + diametro_furo_final + ' <br />');
+      document.write('COMPRIMENTO REBAIXO : '  + comprimento_rebaixo + ' <br />');
+      document.write('DIAMETRO REBAIXO : '  + diametro_rebaixo + ' <br />');
+      document.write('COMPRIMENTO REBAIXO INTERNO : '  + comprimento_rebaixo_interno + ' <br />');
+      document.write('DIAMETRO REBAIXO INTERNO : '  + diametro_rebaixo_interno + ' <br />');
+      document.write('COMPRIMENTO CORTE : '  + comprimento_corte + ' <br />');
+      document.write('; -------------------------------- <br />' );
+
+
+      ////facer/////////
+
+     document.write('-------Inicio de programa---------- <br />');
+     document.write('; -------------------------------- <br />' );
+     document.write('FACEAR <br />');
+     document.write('G40 <br />');
+     document.write('G90 G00 G53 X240 Z300 T0 D0 M9 <br />');
+     document.write('T1 D1; DESBATE EXTERNO - WNMG <br />');
+     document.write('G54 <br />');
+     document.write('G95 <br />');
+     document.write('LIMS = 1700 <br />');
+     document.write('G96 S180 M04 <br />');
+     document.write('M07 <br />');
+    
+     aproximacao();
+
+     document.write('G00 X '  + (diametro_bruto + 10) + ' Z ' + .1 + '<br />' ); 
+     document.write('G04 F.01 <br />');
+     document.write('G01 X ' + (diametro_furo_inicial - 2) + ' F.15  <br />');
+     document.write('G00 X ' + (diametro_furo_inicial - 2) + ' Z ' + 1. + '<br />' );
+     document.write('G04 F.01 <br />');
+     document.write('G00 X ' + (diametro_furo_inicial - 2) + ' Z ' + 10. + '<br />' );
+     document.write('G04 F.01 <br />');
+ 
+       espaco();
+
+     document.write('G40 <br />');
+     
+
+     /////////desbaste externo///////////
+
+     document.write('DESBASTE EXTERNO <br />');
+     document.write('G90 G00 G53 X240 Z300 T0 D0 M9 <br />');
+     document.write('T1 D1; DESBATE EXTERNO - WNMG <br />');
+     document.write('G54 <br />');
+     document.write('G95 <br />');
+     document.write('LIMS = 1500 <br />');
+     document.write('G96 S1800 M04 <br />');
+     document.write('M07 <br />');
+
+     aproximacao();
+
+     if (comprimento_rebaixo == 0){
+         desbaste();
+          
+     }else if (comprimento_rebaixo_2 == 0  && raio_externo == 0){
+            desbaste();
+            desbaste_rebaixo_1();  
+
+     }else if (comprimento_rebaixo_2 == 0 ){
+           desbaste();
+           desbaste_rebaixo_pos_raio();
+           desbaste_rebaixo_1_raio();  
+  
+
+     }else if (raio_externo == 0){
+         desbaste();
+         desbaste_rebaixo_1();
+         desbaste_rebaixo_2();
+
+     }
+
+   else{
+     desbaste();
+     desbaste_rebaixo_pos_raio();
+     desbaste_rebaixo_1_raio();
+     desbaste_rebaixo_2();
+
+    
+  }
+//////////////////
+
+      
+      ///////////////desbaste interno////////////
+
+     document.write('DESBASTE INTERNO <br />');
+     document.write('G90 G00 G53 X240 Z300 T0 D0 M9 <br />');
+     document.write('T4 D1; DESBATE INTERNO - WNMG <br />');
+     document.write('G54 <br />');
+     document.write('G95 <br />');
+     document.write('LIMS = 1500 <br />');
+     document.write('G96 S1800 M04 <br />');
+     document.write('M07 <br />');
+     
+     aproximacao();
+
+if(comprimento_rebaixo_interno == 0){
+
+      desb_interno();
+           
+          // document.write('G40 <br />');
+          
+}else{
+    if (comprimento_rebaixo_interno_2 == 0){
+    desb_interno(); 
+    desb_interno_rebaixo();
+   }
+ else{
+    desb_interno(); 
+    desb_interno_rebaixo();
+    desb_interno_rebaixo_2();
+   }
+ }
+ 
+         // espaco();
+
+         /////////acabamento interno///////////
+   
+     document.write('ACABAMENTO INTERNO <br />');   
+     document.write('G90 G00 G53 X240 Z300 T0 D0 M9 <br />');
+     document.write('T6 D1; ACABAMENTO INTERNO - WNMG <br />'); 
+     document.write('G54 <br />'); 
+     document.write('G95 <br />');
+     document.write('LIMS = 1500 <br />');
+     document.write('G96 S1800 M04 <br />');
+     document.write('M07 <br />');
+     
+     aproximacao()
+
+if (diametro_rebaixo_interno == 0){
+       acabamento_inter();
+
+}else{
+     if( comprimento_rebaixo_interno_2 == 0){
+     acabamento_inter_1_rebaixo();
+     
+}
+ else{
+   acabamento_inter_2_rebaixo();
+ }
+}
+
+   //  espaco();
+
+      ////////////acabamento externo//////////
+
+     document.write('ACABAMENTO EXTERNO <br />');
+     document.write('G90 G00 G53 X240 Z300 T0 D0 M9 <br />');
+     document.write('T5 D1; ACABAMENTO EXTERNO - WNMG <br />');
+     document.write('G54 <br />');
+     document.write('G95 <br />');
+     document.write('LIMS = 1500 <br />');
+     document.write('G96 S1800 M04 <br />');
+     document.write('M07 <br />');
+  
+   if(comprimento_rebaixo == 0){
+
+         acabamento_ext();
+
+         //  document.write('G40 <br />');
+           
+     }else{
+          if (comprimento_rebaixo_2 == 0){
+          
+          acabamento_externo_1_rebaixo();
+  }
+   else{
+     acabamento_externo_2_rebaixo();
+    }
+  }
+
+////corte///////
+  
+     document.write('CORTE BEDAME <br />');
+     document.write('G90 G00 G53 X240 Z300 T0 D0 M9 <br />');
+     document.write('T8 D1; CORTE BEDAME - WNMG <br />');
+     document.write('G54 <br />');
+     document.write('G95 <br />');
+     document.write('LIMS = 1000 <br />');
+     document.write('G96 S600 M04 <br />');
+     document.write('M07 <br />');
+
+     aproximacao();
+     
+     document.write('G00 X ' + (diametro_final + 10) + ' Z ' + comprimento_corte + '<br />');
+     document.write(' G04 F.01 <br />' );     
+     document.write('G00 X ' + (diametro_final + 2) + ' Z ' + comprimento_corte + '<br />');
+     document.write(' G04 F.01 <br /> ');
+     document.write('X ' + (diametro_final -2) + ' F.02 <br />' );
+     document.write('X ' + (diametro_final + 2) + ' Z ' + ( comprimento_corte + 1) + '<br />');
+     document.write('G04 F.01 <br />');
+     document.write('G01 X ' + diametro_final + ' Z ' + (comprimento_corte + .4) + '<br />');
+     document.write('X ' + ( diametro_final - .6) + ' Z ' + comprimento_corte + '<br />');
+     document.write('X ' + (diametro_furo_final - 2) + '<br />');
+     document.write('G00 X ' + (diametro_final + 10) + ' Z ' + comprimento_corte + '<br />');
+     document.write('G04 F.01 <br />');
+        
+     espaco();
+
+     document.write('G04 F.01 <br />');
+     document.write('G40 <br />');
+     document.write('G90 G00 G53 X240 Z300 T0 D0 M9 <br />');
+     document.write('M30 <br />');
+
+         }
+
+		</script>
+
+
+<style>
+
+ body {
+  background: url('imagem3.png');     
+  background-attachment: fixed;
+  background-size: 100%;
+
+
+}
+  .texto-capa {
+  text-align: center;
+  color: white;
+  display: table-cell;
+  vertical-align: middle;
+ 
+}
+
+</style>
+
+	</head>
+
+	<body>
+		
+		<div class="container">
+      
+			<div class="jumbotron">
+       
+				<h1>CNC PROGRAMMING</h1>
+
+			</div>
+
+			<hr />
+      
+			<div class="row">
+         
+        <div class="col-md-6">
+				
+           <h3>Desbaste Externo</h3>
+					<input id="comprimento" type="text" class="form-control" class="btn btn-lg btn-primary pull-right" placeholder="Digite o comprimento da peça" />
+				<br />
+					<input id="diametro_bruto"type="text" class="form-control" class="btn btn-lg btn-primary pull-right" placeholder="Digite o diamentro bruto da peça" />
+			<br />
+					<input id="diametro_final" type="text" class="form-control" placeholder="Digite o diamentro final da peça" />
+		
+				</div>
+
+</div>
+       
+				<div class="row">
+           <div class="col-md-6">
+           <h3>Desbaste Interno</h3>
+					<input id="diametro_furo_inicial"type="text" class="form-control" placeholder="Digite o diamentro inicial do furo"/>
+			<br />
+
+					<input id="diametro_furo_final" type="text" class="form-control" placeholder="Digite o diamentro final do furo" />
+				</div>
+
+			</div>
+
+				<div class="row">
+           <div class="col-md-6">
+          <h3>Rebaixo Externo</h3>
+      
+					<input id="comprimento_rebaixo"type="text" class="form-control" placeholder="Digite o comprimento do 1 rebaixo"/>
+
+			<br />
+
+					<input id="diametro_rebaixo" type="text" class="form-control" placeholder="Digite o diamentro do 1 rebaixo" />
+			
+       <br />
+
+        <input id="raio_externo" type="text" class="form-control" placeholder="Digite o raio do 1 rebaixo" />
+      
+       <br />
+      
+          <input id="comprimento_rebaixo_2"type="text" class="form-control" placeholder="Digite o comprimento do 2 rebaixo"/>
+      
+      <br />
+
+          <input id="diametro_rebaixo_2" type="text" class="form-control" placeholder="Digite o diamentro do 2 rebaixo" />
+
+        </div>
+				
+      </div>
+
+				  <div class="row">
+             <div class="col-md-6">
+           <h3>Rebaixo Interno</h3>
+
+					<input id="comprimento_rebaixo_interno"type="text" class="form-control" placeholder="Digite o comprimento do rebaixo interno"/>
+			
+				<br />
+			
+					<input id="diametro_rebaixo_interno" type="text" class="form-control" placeholder="Digite o diamentro do rebaixo interno" />
+			
+      <br />
+
+          <input id="comprimento_rebaixo_interno_2"type="text" class="form-control" placeholder="Digite o comprimento do rebaixo interno 2"/>
+    
+        <br />
+
+          <input id="diametro_rebaixo_interno_2" type="text" class="form-control" placeholder="Digite o diamentro do rebaixo interno 2" />
+        </div>
+
+				</div>
+
+				<div class="row">
+           <div class="col-md-6">
+          <h3>
+         Corte
+         </h3>
+					<input id="comprimento_corte"type="text" class="form-control" placeholder="Digite o comprimento do corte"/>
+			
+			</div>
+
+    </div>
+
+			<hr />
+
+			<div class="row">
+				<div class="col-md-4"></div>
+
+				<div class="col-md-4"></div>
+
+				<div>
+			
+        <div class="col-md-4">
+          <button type="button" class="btn btn-lg btn-primary pull-right" onclick="retorno()">Input</button>
+        </div>
+      </div>
+
+				</div>
+			</div>
+
+			<hr />
+
+		</div>
+	</body>
+</html>
